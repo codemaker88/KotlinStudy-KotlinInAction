@@ -13,7 +13,7 @@
 * 코틀린의 **문자열 템플릿**을 이용해서 **출력**에 나와있는대로 출력해주세요!
 
 #### Main
-```text
+```kotlin
 fun main(args: Array<String>) {
     var currentDate: Long = 20180825
     val leader = TeamLeader(name = "TeamLeader").apply {
@@ -51,7 +51,7 @@ fun main(args: Array<String>) {
 * 아래 **출력** 처럼 출력하도록 합니다.
 
 #### Main
-```text
+```kotlin
 fun main(args: Array<String>) {
                 .
                 .
