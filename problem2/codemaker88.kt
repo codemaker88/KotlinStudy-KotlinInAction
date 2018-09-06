@@ -30,11 +30,11 @@ open class TeamMember(val intranetInfo: IntranetInfo) {
     infix fun leaveRange(period: LongRange) = Vacation(this, period)
 }
 
-class TeamLeader(intranetInfo: IntranetInfo, memberNameList: List<IntranetInfo>) : TeamMember(intranetInfo) {
+class TeamLeader(intranetInfo: IntranetInfo, memberList: List<IntranetInfo>) : TeamMember(intranetInfo) {
     val teamMembers: List<TeamMember>
 
     init {
-        teamMembers = memberNameList.map { memberName -> TeamMember(memberName) }.toList()
+        teamMembers = memberList.map { memberName -> TeamMember(memberName) }.toList()
     }
 
     fun applyForALeave(vacationInfo: Vacation) {
@@ -82,7 +82,7 @@ fun main(args: Array<String>) {
             .map { it.toString().parseToIntranetInfo() }
     val systemLeaderInfo: IntranetInfo = CompanySystem.getRawTeamLeader().toString().parseToIntranetInfo()
 
-    val leader = TeamLeader(systemLeaderInfo, memberNameList = defaultMemberList + systemMemberList)
+    val leader = TeamLeader(systemLeaderInfo, memberList = defaultMemberList + systemMemberList)
     val me = leader.teamMembers[3] // 팀원 하나 선택
 
     println(leader.intranetInfo)
