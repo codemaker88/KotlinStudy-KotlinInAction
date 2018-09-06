@@ -143,7 +143,11 @@ TeamLeader 객체를 만드는 시점에 TeamMember가 결정되도록 수정해
 object CompanySystem {
 
     fun getRawTeamMembers(): List<StringBuilder> {
-        return StringBuilder("A|사원|휴가(2018.04.02~2018.04.05)\nB|과장|\nC|차장|")
+        return listOf(
+                StringBuilder("A|사원|휴가(2018.04.02~2018.04.05)"),
+                StringBuilder("B|과장|"),
+                StringBuilder("C|차장|")
+        )
     }
 
     fun getRawTeamLeader(): StringBuffer {
