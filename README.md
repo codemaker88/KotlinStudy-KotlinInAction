@@ -285,10 +285,11 @@ image_view6.setDecoratable(AlphaDecorate(ColorDecorate(TriangleDecorate(RectDeco
 
 **[문제 3-3]**
 아래 처럼 각 이미지뷰들을 클릭, 롱클릭 하면 꾸며진 정보들이 로그로 출력되도록 해보세요.
+```
 onClick : ColorDecorate + AlphaDecorate + CircleDecorate + DefaultDecorate
 onLongClick : ColorDecorate + AlphaDecorate + CircleDecorate + DefaultDecorate
 
 onClick : AlphaDecorate + ColorDecorate + TriangleDecorate + RectDecorate + TextDecorate + DefaultDecorate
 onLongClick : AlphaDecorate + ColorDecorate + TriangleDecorate + RectDecorate + TextDecorate + DefaultDecorate
-
+```
 문제 이해를 돕기 위해 MainActivity.kt 를 참고하세요.
