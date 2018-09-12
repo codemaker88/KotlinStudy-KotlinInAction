@@ -1,4 +1,4 @@
-### **[문제 3] Chapter4 클래스, 객체, 인터페이스** 
+## **[문제 3] Chapter4 클래스, 객체, 인터페이스** 
 이번 과제는 4장의 내용을 이용하여 안드로이드에서 연습해봅시다.
 최종적으로 아래의 그림과 같이 완성해 보는것이 목표입니다.
 
@@ -67,10 +67,11 @@ image_view6.setDecoratable(AlphaDecorate(ColorDecorate(TriangleDecorate(RectDeco
 
 **[문제 3-3]**
 아래 처럼 각 이미지뷰들을 클릭, 롱클릭 하면 꾸며진 정보들이 로그로 출력되도록 해보세요.
+```
 onClick : ColorDecorate + AlphaDecorate + CircleDecorate + DefaultDecorate
 onLongClick : ColorDecorate + AlphaDecorate + CircleDecorate + DefaultDecorate
 
 onClick : AlphaDecorate + ColorDecorate + TriangleDecorate + RectDecorate + TextDecorate + DefaultDecorate
 onLongClick : AlphaDecorate + ColorDecorate + TriangleDecorate + RectDecorate + TextDecorate + DefaultDecorate
-
+```
 문제 이해를 돕기 위해 MainActivity.kt 를 참고하세요.
