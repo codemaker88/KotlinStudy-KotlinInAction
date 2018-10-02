@@ -52,6 +52,11 @@ class Test {
             memberList.sumBy { it.years } / memberList.size.toFloat() > 10
                     && memberList.count { it.job == Job.Designer } == 1
         }
+        val 총_경력_합 = { team: Team ->
+            team.memberIndices.asSequence()
+                    .map { index -> members[index] }
+                    .sumBy { it.years }
+        }
 
         //1.
         //총 멤버는 3 명이상 이어야함
@@ -92,6 +97,7 @@ class Test {
                 .filter(총_멤버_3명_이상)
                 .filter(최소_경력_5년_이상)
                 .filter(평균_경력_10년_이상이고_Designer_한명)
+                .sortedByDescending(총_경력_합)
                 .firstOrNull()
 
         //출력 finalTeam
@@ -138,20 +144,21 @@ fun IntRange.random() =
         Random().nextInt((endInclusive + 1) - start) + start
 
 /* output ex)
-Found 125 teams!
-Found 164 teams!
+Found 123 teams!
+Found 157 teams!
 [Found the perfect Team!]
-[Mr.205] Worked as Designer for 7 yrs
-[Mr.206] Worked as QA for 9 yrs
-[Mr.207] Worked as QA for 10 yrs
-[Mr.208] Worked as Planner for 15 yrs
+[Mr.4975] Worked as Coder for 18 yrs
+[Mr.4976] Worked as Coder for 19 yrs
+[Mr.4977] Worked as Coder for 10 yrs
+[Mr.4978] Worked as Designer for 19 yrs
+[Mr.4979] Worked as Planner for 17 yrs
 
-Found 109 teams!
-Found 139 teams!
+Found 117 teams!
+Found 155 teams!
 [Found the perfect Team!]
-[Mr.775] Worked as Coder for 15 yrs
-[Mr.776] Worked as Planner for 15 yrs
-[Mr.777] Worked as QA for 14 yrs
-[Mr.778] Worked as Designer for 17 yrs
-[Mr.779] Worked as QA for 14 yrs
+[Mr.6045] Worked as Designer for 20 yrs
+[Mr.6046] Worked as QA for 14 yrs
+[Mr.6047] Worked as QA for 18 yrs
+[Mr.6048] Worked as Coder for 20 yrs
+[Mr.6049] Worked as QA for 14 yrs
  */
