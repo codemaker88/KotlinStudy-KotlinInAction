@@ -72,3 +72,8 @@ fun main(args: Array<String>) {
 }
 
 ```
+
+### 출력 예시
+```text
+    winner : Person(name=강 우진, number=7, cash=80000)
+```
