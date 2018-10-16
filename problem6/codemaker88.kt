@@ -29,8 +29,9 @@ class Person(val id: String) {
     //var salary: Int by SalaryDelegate
 
     //문제2 구현
-    var salary: Int by Delegates.observable(SalaryDelegate.getSalary(this)) {
+    var salary: Int by Delegates.observable(EmployeeRepository.getEmployee(this).salary) {
         property: KProperty<*>, oldValue: Int, newValue: Int ->
+        EmployeeRepository.getEmployee(this).salary = newValue
         println("${name}님의 급여가 ${oldValue}에서 ${newValue}로 변경되었습니다.")
     }
 
@@ -44,21 +45,12 @@ class Person(val id: String) {
 
 //문제1 구현
 object SalaryDelegate {
-
-    fun getSalary(person: Person): Int {
-        return EmployeeRepository.employees.find {
-            it.id == person.id
-        }?.salary ?: 0
-    }
-
     operator fun getValue(person: Person, property: KProperty<*>): Int {
-        return getSalary(person)
+        return EmployeeRepository.getEmployee(person).salary
     }
 
     operator fun setValue(person: Person, property: KProperty<*>, salary: Int) {
-        EmployeeRepository.employees.find {
-            it.id == person.id
-        }?.salary = salary
+        EmployeeRepository.getEmployee(person).salary = salary
     }
 }
 
@@ -83,21 +75,22 @@ object EmployeeRepository {
             Employee("1238", "박귀남", 1000, Vacation(LocalDate.now().minusDays(2), LocalDate.now().plusDays(2))),
             Employee("1239", "강영길", 1000, Vacation(LocalDate.now().minusDays(1), LocalDate.now().plusDays(5)))
     )
+
+    fun getEmployee(person: Person): Employee {
+        return EmployeeRepository.employees.single {
+            it.id == person.id
+        }
+    }
 }
 
 object NameDelegate {
     operator fun getValue(person: Person, property: KProperty<*>): String {
-        return EmployeeRepository.employees.single {
-            it.id == person.id
-        }.name
+        return EmployeeRepository.getEmployee(person).name
     }
 
     operator fun setValue(person: Person, property: KProperty<*>, name: String) {
-        EmployeeRepository.employees.single {
-            it.id == person.id
-        }.name = name
+        EmployeeRepository.getEmployee(person).name = name
     }
-
 }
 
 class Vacation(val startDate: LocalDate, val endDate: LocalDate) {
@@ -108,15 +101,11 @@ class Vacation(val startDate: LocalDate, val endDate: LocalDate) {
 
 object VacationDelegate {
     operator fun getValue(person: Person, property: KProperty<*>): Vacation? {
-        return EmployeeRepository.employees.single {
-            it.id == person.id
-        }.vacation
+        return EmployeeRepository.getEmployee(person).vacation
     }
 
     operator fun setValue(person: Person, property: KProperty<*>, vacation: Vacation?) {
-        EmployeeRepository.employees.single {
-            it.id == person.id
-        }.vacation = vacation
+        EmployeeRepository.getEmployee(person).vacation = vacation
     }
 }
 
