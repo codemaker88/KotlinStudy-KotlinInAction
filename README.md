@@ -293,3 +293,181 @@ onClick : AlphaDecorate + ColorDecorate + TriangleDecorate + RectDecorate + Text
 onLongClick : AlphaDecorate + ColorDecorate + TriangleDecorate + RectDecorate + TextDecorate + DefaultDecorate
 ```
 문제 이해를 돕기 위해 MainActivity.kt 를 참고하세요.
+
+
+## 문제4 - 팀 찾기
+
+회사에 긴급 프로젝트 하나가 들어 왔습니다.
+회사는 시간을 아끼기 위해 가장 빠르게 만들수 있는 팀을 고르려고 합니다.
+주어진 팀들 중 주어진 조건에 가장 적합한 팀을 골라 봅시다.
+
+### 문제 1-1 디자이너가 있는 팀들을 찾기
+* 총 멤버는 3 명이상 이어야함
+* 모든 멤버들중 Designer 한명이 있어야함
+* 모든 멤버들의 평균 경력이 10 년 이상 이어야함
+* 팀 보너스 셋팅은 LeaderOnly 가 아니어야함
+
+#### Test.run()
+```kotlin
+private val members = createMembers()
+private val teams = createTeams(members)
+
+fun run() {
+    val firstTeams: List<Team> =
+    //출력 firstTeams
+}
+```
+
+#### 출력
+```text
+[Found 1,000 teams!]
+```
+
+### 문제 1-2 기획자가 팀장이 아닌 팀 찾기
+* 총 멤버는 3 명이상 이어야함
+* 리더가 Planner 면 안됨
+* 멤버의 최소 경력이 5 년 이상
+* Incentive 는 Even 이어야함
+
+#### Test.run()
+```kotlin
+private val members = createMembers()
+private val teams = createTeams(members)
+
+fun run() {
+    val secondTeams: List<Team> =
+    //출력 secondTeams
+}
+```
+
+#### 출력
+```text
+[Found 1,000 teams!]
+```
+
+### 문제 1-3 가장 이상적인 팀 찾기
+* 1 과 2 의 조건을 모두 충족하고
+* 총 경력이 가장 높은 팀
+
+#### Test.run()
+```kotlin
+private val members = createMembers()
+private val teams = createTeams(members)
+
+fun run() {
+    val finalTeam: Team? =
+    //출력 finalTeam
+}
+```
+
+#### 출력
+```text
+[Found the perfect Team!]
+[Mr.1234] Worked as Coder for 10 yrs
+[Mr.1222] Worked as Designer for 10 yrs
+.
+.
+.
+[Mr.1222] Worked as Planner for 1 yrs
+```
+
+## 문제5 - Simple 7 Find Game
+
+간단한 7 찾기 게임을 만들어 봅시다.
+인원이 절반으로 줄어 7명 이하 일때까지 7을 찾는 게임은 계속 됩니다.
+최후의 승자의 이름과 상금을 출력해주세요.
+
+### 7 찾기
+* 게임 시작의 인원은 7미만 일 수 없습니다.
+* 7 미만일 경우 RuntimeException이 발생합니다.
+* 각 사용자는 사이즈만큼 생성되며, 각각 고유한 번호를 부여 받습니다.
+* 게임은 사용자가 7명 미만일 경우까지 진행됩니다.
+* 게임에서 승리할 경우 돈이 없는 사용자의경우 기본금액을 받습니다.
+* 게임에서 승리할 경우 돈이 있는 사용자의 경우 가진 금액의 2배를 받습니다.
+* 각 게임에서 이전 승자의 상금은 이후 승자에게 전달됩니다.
+* 사용자들을 생성하는 코드는 아래의 코드를 사용합니다. (https://github.com/DiUS/java-faker) //compile group: 'com.github.javafaker', name: 'javafaker', version: '0.16'
+
+```kotlin
+class Person(val name: String, val number: Int, var cash: Int = 0)
+
+fun List<Person>.findNumber(number: Int): Person? {
+    return this.firstOrNull { it.number == number }
+}
+
+object PersonGenerator {
+    val faker = Faker(Locale("ko"))
+
+    fun generatePeople(size: Int): List<Person> {
+        return generatePeople(size, null)
+    }
+
+    fun generatePeople(size: Int, winner: Person?): List<Person> {
+        if (size < 7) {
+            throw RuntimeException("size는 7이상 이여야 합니다.")
+        }
+        val personList = mutableListOf<Person>()
+        for (index in 1..size) {
+            val name = faker.name().fullName()
+            val number = index
+            personList.add(Person(name, number))
+        }
+        winner?.let { personList.add(winner) }
+        return personList.subList(0, size - 2).shuffled()
+    }
+}
+
+sealed class SevenFindGame {
+   class WinGame: SevenFindGame()
+   class LoseGame: SevenFindGame()
+
+   companion object {
+           fun startGame(size: Int) {
+               val people: List<Person> = PersonGenerator.generatePeople(size)
+               startGame(size, people)
+           }
+
+           private fun startGame(size: Int, people: List<Person>) {
+               val winner = people.findNumber(7)!!
+               if (size / 2 > 7) {
+                   WinGame(winner, size / 2)
+               } else {
+                   WinGame(winner)
+                   println("winner : $winner")
+               }
+               LoseGame(people.filter { it != winner })
+           }
+       }
+}
+
+
+fun main(args: Array<String>) {
+    SevenFindGame.startGame(100) // 7이상의 수
+}
+
+```
+
+### 출력 예시
+```text
+    winner : Person(name=강 우진, number=7, cash=80000)
+```
+
+## 문제6 - 프로퍼티 위임을 사용하여 코드를 작성해봅시다
+
+아주 심플한 문제입니다. 각 문제의 요구사항에 맞게 코드를 작성하여
+출력사항과 동일하게 출력해봅시다.
+
+문제1. Person 클래스에 salary 프로퍼티를 생성(및 위임)하여 급여를 출력할 수 있게 해봅시다.
+(위임 예제는 제공되는 코드를 잘 살펴봅시다.)
+
+var person = PersonRepository.getPerson("1233") // 사번에 해당하는 Person을 가져옵니다.
+println(person)
+
+-> 이름 : 김인혁 / 사번 : 1233 / 급여 : 2000
+
+문제2. 문제1에서 작성한 salary 프로퍼티 위임을 수정하여 salary가 변경될 때 결과를 출력해봅시다.
+(7장 335p 리스트 7.19 ~ 7.23 예제를 참고하여 진행해봅시다)
+var person = PersonRepository.getPerson("1233") // 사번에 해당하는 Person을 가져옵니다.
+println(person) // -> 이름 : 김인혁 / 사번 : 1233 / 급여 : 2000
+person.salary = 2000
+
+-> 김인혁님의 급여가 1000에서 2000로 변경되었습니다.
