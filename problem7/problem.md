@@ -100,7 +100,7 @@ fun main(args: Array<String>) {
             .map { val ss = it.split("\t"); Image(ss[0].toInt(), ss[1]) }
     val captions = File(CAPTION_TXT_FILE_PATH)
             .readLines()
-            .map { val ss = it.split("\t"); Caption(ss[1].toInt(), ss[2]) }
+            .map { val ss = it.split("\t"); Caption(ss[0].toInt(), ss[1]) }
 
 
     val startNanoTime = System.nanoTime()
