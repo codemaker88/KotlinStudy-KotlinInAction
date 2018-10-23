@@ -27,17 +27,17 @@ data class ImageCaptions(val imageId: Int, val imageUrl: String, val description
 data class Image(val imgId: Int, val imgUrl: String)
 data class Caption(val imgId: Int, val description: String)
 ```
-> images.txt
-> ImageId : ImageUrl
-> 516168 : http://images.cocodataset.org/train2014/COCO_train2014_000000516168.jpg
-> 475546 : http://images.cocodataset.org/train2014/COCO_train2014_000000475546.jpg
+> images.txt<br />
+> ImageId : ImageUrl<br />
+> 516168 : http://images.cocodataset.org/train2014/COCO_train2014_000000516168.jpg<br />
+> 475546 : http://images.cocodataset.org/train2014/COCO_train2014_000000475546.jpg<br />
 > ...
 
-> captions.txt
-> ImageId : Description
-> 516168 : a man sits in front of a table with some wine glasses on it.
-> 516168 : A man is sitting at a table with papers and wine goblets.
-> 475546 : People having a drink in a basement bar.
+> captions.txt<br />
+> ImageId : Description<br />
+> 516168 : a man sits in front of a table with some wine glasses on it.<br />
+> 516168 : A man is sitting at a table with papers and wine goblets.<br />
+> 475546 : People having a drink in a basement bar.<br />
 > ...
 
 - Task 02
