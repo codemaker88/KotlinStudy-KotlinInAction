@@ -15,11 +15,16 @@ object Cache {
     val imageCache = mutableMapOf<Int, Image>() // by image id
     val captionCache = mutableMapOf<Int, MutableList<Caption>>() // by image id
     val imageCaptionCache = mutableMapOf<Int, ImageCaptions>()
+    var maxId : Int = 0
 
     fun initImage(images: List<Image>) {
         if (imageCache.isEmpty()) {
             images.forEach {
                 imageCache[it.imgId] = it
+
+                if(maxId<it.imgId){
+                    maxId = it.imgId
+                }
             }
         }
     }
@@ -108,9 +113,17 @@ fun filterImageCaptions(imageCaptions: List<ImageCaptions>,
             .map { it.imgId }
             .toList()
 
+    val max = Cache.maxId
+    val booleanArray = BooleanArray(max+2)
+
+    conditionCaptions.forEach {
+        booleanArray[it] = true
+    }
+
     return Cache.imageCaptionCache
             .map { it.value }
-            .filter { conditionCaptions.contains(it.imageId) }
+//            .filter { conditionCaptions.contains(it.imageId) }
+            .filter { booleanArray[it.imageId] }
 }
 
 
