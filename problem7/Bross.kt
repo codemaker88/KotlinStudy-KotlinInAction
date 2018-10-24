@@ -2,6 +2,7 @@ import java.io.File
 import java.lang.RuntimeException
 import java.util.concurrent.TimeUnit
 import java.text.DecimalFormat
+import kotlin.math.pow
 
 
 const val IMAGE_TXT_FILE_PATH = "C:\\Users\\Bross-Internet\\IdeaProjects\\kotlin-study\\src\\main\\resources\\images.txt"
@@ -15,11 +16,16 @@ object Cache {
     val imageCache = mutableMapOf<Int, Image>() // by image id
     val captionCache = mutableMapOf<Int, MutableList<Caption>>() // by image id
     val imageCaptionCache = mutableMapOf<Int, ImageCaptions>()
+    var maxId : Int = 0
 
     fun initImage(images: List<Image>) {
         if (imageCache.isEmpty()) {
             images.forEach {
                 imageCache[it.imgId] = it
+
+                if(maxId<it.imgId){
+                    maxId = it.imgId
+                }
             }
         }
     }
@@ -98,6 +104,7 @@ fun filterImageCaptions(imageCaptions: List<ImageCaptions>,
                         mustNotContain: List<String>): List<ImageCaptions> {
     // - implementation
     Cache.initImageCaption(imageCaptions)
+
     val conditionCaptions = Cache.captionCache
             .map { it.value }
             .flatMap { it -> it }
@@ -108,9 +115,17 @@ fun filterImageCaptions(imageCaptions: List<ImageCaptions>,
             .map { it.imgId }
             .toList()
 
+    val max = Cache.maxId
+    val booleanArray = BooleanArray(max+2)
+
+    conditionCaptions.forEach {
+        booleanArray[it] = true
+    }
+
     return Cache.imageCaptionCache
             .map { it.value }
-            .filter { conditionCaptions.contains(it.imageId) }
+//            .filter { conditionCaptions.contains(it.imageId) }
+            .filter { booleanArray[it.imageId] }
 }
 
 
@@ -134,10 +149,6 @@ fun TimeUnit.postfix(): String {
     }
 }
 
-fun Long.cipher(): Double { // 자릿수 - 1
-    return (Math.log10(this.toDouble()))
-}
-
 fun getTimeTransformer(unit: TimeUnit): (Long) -> String {
     return when (unit) {
         TimeUnit.NANOSECONDS ->   // - 1234567 ->  1,234,567 ns
@@ -147,12 +158,12 @@ fun getTimeTransformer(unit: TimeUnit): (Long) -> String {
 
         TimeUnit.MILLISECONDS ->
             fun(value: Long): String {
-                return "${value / Math.pow(10.toDouble(), value.cipher())} ${unit.postfix()}"
+                return "${value / 10.toFloat().pow(6)} ${unit.postfix()}"
             }
         // - 1234567 ->   1.234567 ms
 
         TimeUnit.SECONDS -> fun(value: Long): String {
-            return "0.00$value ${unit.postfix()}"
+            return "${value / 10.toFloat().pow(9)} ${unit.postfix()}"
         }
 
         // - 1234567 -> 0.001234567 s
