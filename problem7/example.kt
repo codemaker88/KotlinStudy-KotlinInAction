@@ -2,8 +2,8 @@ import java.io.File
 import java.lang.RuntimeException
 import java.util.concurrent.TimeUnit
 
-const val IMAGE_TXT_FILE_PATH = "D:\\ML_DATA_SET\\images.txt"
-const val CAPTION_TXT_FILE_PATH = "D:\\ML_DATT_SET\\captions.txt"
+const val IMAGE_TXT_FILE_PATH = "D:\\images.txt"
+const val CAPTION_TXT_FILE_PATH = "D:\\captions.txt"
 
 val needToContain = listOf("sky", "cloud", "sunset", "dawn", "sun ", "sun.", "moon", "moon.", "sunrise")
 val needToAvoid = listOf("indoor", "bathroom", "kitchen", "selfie", "basement", "bed", "video", "desk", "refrigerator", "food", "pizza", "mirror", "computer", "web", "table", "plate")
@@ -30,12 +30,15 @@ fun main(args: Array<String>) {
 
     val nanoTransformer = getTimeTransformer(TimeUnit.NANOSECONDS)      // 1234567 ->  1,234,567 ns
     val milliTransformer = getTimeTransformer(TimeUnit.MILLISECONDS)    // 1234567 ->   1.234567 ms
-    val secondTransformer = getTimeTransformer(TimeUnit.MILLISECONDS)   // 1234567 -> 0.001234567 s
+    val secondTransformer = getTimeTransformer(TimeUnit.SECONDS)        // 1234567 -> 0.001234567 s
     println("spend time : ")
     println("\t${nanoTransformer(totalTime)}")
     println("\t${milliTransformer(totalTime)}")
     println("\t${secondTransformer(totalTime)}")
     println("result : size - ${skyImageCaptions.size} \t ${skyImageCaptions.last()}")
+
+    // Test!
+    //filteredImageCaptionTest(skyImageCaptions)
 }
 
 inline fun confirmTxtFiles(crossinline confirmation: () -> Boolean) {
@@ -88,3 +91,44 @@ data class Caption(
         val imgId: Int,
         val description: String
 )
+
+/* test your code! */
+val goodDescription1 = listOf(
+        "이 문장들에는 SKY 가 있음",
+        "이 문장들에는 needToAvoid 중 어느 것도 포함하지 않음",
+        "철수는 SKY 가 있으니 관심이 있음"
+)
+val goodDescription2 = listOf(
+        "이 문장들에는 SKY 가 있음",
+        "이 문장들에는 또한 CLOUD 도 있음",
+        "철수는 SKY 뿐만 아니라 CLOUD 도 있으니 관심이 있음"
+)
+val badDescription1 = listOf(
+        "이 문장들에는 needToAvoid 뿐만 아니라 needToContain 중 어느 것도 포함하지 않음",
+        "철수는 관심이 없음"
+)
+val badDescription2 = listOf(
+        "이 문장들에는 SKY 가 있음",
+        "이 문장들에는 INDOOR 도 있음",
+        "철수는 SKY 는 있지만 INDOOR 가 있어서 관심이 없음"
+)
+
+fun filteredImageCaptionTest(imageCaptions: List<ImageCaptions>) {
+    imageCaptions.forEach {
+        it.descriptions.forEach { desc ->
+            needToAvoid.forEach {
+                if (desc.contains(it)) throw RuntimeException("'$desc' has $it")
+            }
+        }
+    }
+
+    imageCaptions.forEach {
+        var passed = false
+        it.descriptions.forEach { desc ->
+            needToContain.forEach {
+                if (desc.contains(it)) passed = true
+            }
+        }
+        if (!passed) throw RuntimeException("'${it.descriptions}' hasn't any of needToContain")
+    }
+}
