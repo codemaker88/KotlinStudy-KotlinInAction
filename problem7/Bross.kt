@@ -8,7 +8,7 @@ import kotlin.math.pow
 const val IMAGE_TXT_FILE_PATH = "C:\\Users\\Bross-Internet\\IdeaProjects\\kotlin-study\\src\\main\\resources\\images.txt"
 const val CAPTION_TXT_FILE_PATH = "C:\\Users\\Bross-Internet\\IdeaProjects\\kotlin-study\\src\\main\\resources\\captions.txt"
 
-val needToContain = listOf("sky", "cloud", "sunset", "dawn", "moon", "moon.", "sunrise", "sun")
+val needToContain = listOf("sky", "cloud", "sunset", "dawn", "moon", "sunrise", "sun")
 val needToAvoid = listOf("indoor", "bathroom", "kitchen", "selfie", "basement", "bed", "video", "desk", "refrigerator", "food", "pizza", "mirror", "computer", "web", "table", "plate")
 
 
@@ -57,7 +57,7 @@ object Cache {
 fun main(args: Array<String>) {
     val fileExists = File(IMAGE_TXT_FILE_PATH).exists() && File(CAPTION_TXT_FILE_PATH).exists()
     confirmTxtFiles { fileExists }
-    makeSure { if (!fileExists) return@makeSure throw RuntimeException("file check! ") }
+    makeSure { if (!fileExists) throw RuntimeException("file check! ") }
 
     val images = File(IMAGE_TXT_FILE_PATH)
             .readLines()
