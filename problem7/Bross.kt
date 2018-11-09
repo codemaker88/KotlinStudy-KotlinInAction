@@ -8,7 +8,7 @@ import kotlin.math.pow
 const val IMAGE_TXT_FILE_PATH = "C:\\Users\\Bross-Internet\\IdeaProjects\\kotlin-study\\src\\main\\resources\\images.txt"
 const val CAPTION_TXT_FILE_PATH = "C:\\Users\\Bross-Internet\\IdeaProjects\\kotlin-study\\src\\main\\resources\\captions.txt"
 
-val needToContain = listOf("sky", "cloud", "sunset", "dawn", "sun ", "sun.", "moon", "moon.", "sunrise")
+val needToContain = listOf("sky", "cloud", "sunset", "dawn", "moon", "sunrise", "sun")
 val needToAvoid = listOf("indoor", "bathroom", "kitchen", "selfie", "basement", "bed", "video", "desk", "refrigerator", "food", "pizza", "mirror", "computer", "web", "table", "plate")
 
 
@@ -16,14 +16,14 @@ object Cache {
     val imageCache = mutableMapOf<Int, Image>() // by image id
     val captionCache = mutableMapOf<Int, MutableList<Caption>>() // by image id
     val imageCaptionCache = mutableMapOf<Int, ImageCaptions>()
-    var maxId : Int = 0
+    var maxId: Int = 0
 
     fun initImage(images: List<Image>) {
         if (imageCache.isEmpty()) {
             images.forEach {
                 imageCache[it.imgId] = it
 
-                if(maxId<it.imgId){
+                if (maxId < it.imgId) {
                     maxId = it.imgId
                 }
             }
@@ -57,7 +57,7 @@ object Cache {
 fun main(args: Array<String>) {
     val fileExists = File(IMAGE_TXT_FILE_PATH).exists() && File(CAPTION_TXT_FILE_PATH).exists()
     confirmTxtFiles { fileExists }
-    makeSure { if (!fileExists) return@makeSure throw RuntimeException("file check! ") }
+    makeSure { if (!fileExists) throw RuntimeException("file check! ") }
 
     val images = File(IMAGE_TXT_FILE_PATH)
             .readLines()
@@ -110,13 +110,13 @@ fun filterImageCaptions(imageCaptions: List<ImageCaptions>,
             .flatMap { it -> it }
             .asSequence()
             .filter { it ->
-                !it.description.split(" ").none { mustContain.contains(it) && !mustNotContain.contains(it) }
+                !it.description.split(" ", ",", ".").none { mustContain.contains(it) && !mustNotContain.contains(it) }
             }
             .map { it.imgId }
             .toList()
 
     val max = Cache.maxId
-    val booleanArray = BooleanArray(max+2)
+    val booleanArray = BooleanArray(max + 2)
 
     conditionCaptions.forEach {
         booleanArray[it] = true
@@ -124,7 +124,6 @@ fun filterImageCaptions(imageCaptions: List<ImageCaptions>,
 
     return Cache.imageCaptionCache
             .map { it.value }
-//            .filter { conditionCaptions.contains(it.imageId) }
             .filter { booleanArray[it.imageId] }
 }
 

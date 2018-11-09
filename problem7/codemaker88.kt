@@ -43,7 +43,7 @@ fun main(args: Array<String>) {
 }
 
 /*
-result : size - 4757
+result : size - 3685
 ImageCaptions(imageId=339278,
 imageUrl=http://images.cocodataset.org/train2014/COCO_train2014_000000339278.jpg,
 descriptions=[
@@ -72,8 +72,12 @@ inline fun makeSure(confirmation: () -> Unit) {
 fun filterImageCaptions(skyImageCaptions: List<ImageCaptions>,
                         mustContain: List<String>,
                         mustNotContain: List<String>): List<ImageCaptions> {
-    val mustContainRegex = mustContain.joinToString(separator = "|").toRegex()
-    val mustNotContainRegex = mustNotContain.joinToString(separator = "|").toRegex()
+    val mustContainRegex = mustContain.joinToString(separator = "|")
+            .replace(".", "\\.")
+            .toRegex()
+    val mustNotContainRegex = mustNotContain.joinToString(separator = "|")
+            .replace(".", "\\.")
+            .toRegex()
     return skyImageCaptions.asSequence()
             .filter { it.descriptions.any { s: String -> s.contains(mustContainRegex) } }
             .filter { !it.descriptions.any { s: String -> s.contains(mustNotContainRegex) } }
